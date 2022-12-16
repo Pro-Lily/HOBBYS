@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.announce">
+
+	<select id="countalllist" resultType="int">
+		SELECT count(*)
+		FROM announce
+	</select>
+	
+	<select id="selectlist" parameterType="pager" resultType="announce"> 
+		select rnum, ano, memail, atitle, acontent, adate, aifmain, ahitnum
+		from (select rownum as rnum, ano, memail, atitle, acontent, adate, aifmain, ahitnum
+			      from (select ano, memail, atitle, acontent, adate, aifmain, ahitnum
+							from announce
+							order by aifmain desc, adate desc)
+			      where rownum &lt;=#{endRowNo} )
+		where rnum &gt;=#{startRowNo}
+	</select> 
+	
+	<insert id="insertannounce" parameterType="announce">
+		INSERT INTO announce(ano, memail, atitle, acontent, adate, aifmain, ahitnum)
+		VALUES (SEQ_ANNOUNCE_ANO.NEXTVAL, #{memail}, #{atitle}, #{acontent}, sysdate, #{aifmain}, #{ahitnum})
+	</insert>
+	
+	<select id="selectannounce" parameterType="int" resultType="announce">
+		SELECT ano, memail, atitle, acontent, adate, aifmain, ahitnum
+		FROM announce
+		WHERE ano=#{ano}
+	</select>
+	
+	<!-- 조회수 -->
+	<update id="updateahitnum" parameterType="int">
+		UPDATE announce 
+		SET ahitnum =(SELECT ahitnum FROM announce WHERE ano=#{ano})+1 
+		WHERE ano=#{ano}
+	</update>
+	
+	<update id="updateannounce" parameterType="announce">
+		UPDATE announce SET 
+		atitle=#{atitle}, acontent=#{acontent}, aifmain=#{aifmain}  
+		WHERE ano=#{ano}
+	</update>
+	
+	<delete id="deleteannounce" parameterType="int">
+		DELETE FROM announce
+		WHERE ano=#{ano}
+	</delete>
+</mapper>

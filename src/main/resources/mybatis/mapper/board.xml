@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.board">
+	
+	<select id="selectByBno" parameterType="int" resultType="board">
+		select board.bno, btitle, bcontent, bdate, board.memail, to_char(bdate, 'YYYY-MM-DD HH24:Mi:SS') bdate, board.murl, blike, member.mnickname, board.blinkcontent
+		from board, member
+		where bno = #{bno} AND board.memail = member.memail
+	</select>
+
+	<!-- 보드 게시물 / url & cno 가 맞을 때 -->
+	<select id="categoryListLink"  parameterType="map"  resultType="board">
+		select bno, btitle, REGEXP_REPLACE(bcontent, <![CDATA['<[^>]*>|\&([^;])*;']]>) as bcontent, bdate, bimage, c.cno, c.ccontent, b.murl
+		from board b, category c
+		where c.cno=b.cno and b.murl=#{murl} and c.cno=#{cno}
+		order by bdate desc
+	</select>
+	
+	<!-- 나의 블로그 내 좋아요 순 상위 4개 게시물 리스트 -->
+	<select id="selectBLikeList" parameterType="String" resultType="board">
+		select bno, btitle, REGEXP_REPLACE(bcontent, <![CDATA['<[^>]*>|\&([^;])*;']]>) as bcontent, bdate, blike, murl
+		from ( select bno, btitle, bcontent, bdate, blike, murl
+		from board 
+		order by blike desc) 
+		where murl=#{murl} and rownum &lt;=4
+	</select>	 	
+		
+	<select id="homeRanking" resultType="board">
+		select bno, btitle, REGEXP_REPLACE(bcontent, <![CDATA['<[^>]*>|\&([^;])*;']]>) as bcontent, bdate, blike, murl, bimage
+		from ( select bno, btitle, bcontent, bdate, blike, murl, bimage
+		from board 
+		order by blike desc) 
+		where rownum &lt;=4
+	</select>
+	
+	<!-- 좋아요 순으로 불러오기 ranking 총 데이터 -->
+	<select id="selectLikeAll" resultType="board">	
+		select rownum as rnum,  bno, btitle, bcontent, bdate, blike, cno, bimage, mnickname, mmyimage, mintro, murl
+		from(select bno, btitle, bcontent, bdate, blike, cno, bimage, mnickname, mmyimage, mintro, b.murl
+       			 from board b, member m
+       			 where b.memail = m.memail
+       			 order by blike desc)
+		where rownum &lt;= 12
+	</select>
+	
+	<!-- 좋아요 순으로 불러오기 ranking 카테고리별 데이터 -->
+	<select id="selectLikeCategory" parameterType="int" resultType="board">
+		select rownum as rnum,  bno, btitle, bcontent, bdate, blike, cno, bimage, mnickname, mmyimage, mintro, murl
+		from(select bno, btitle, bcontent, bdate, blike, cno, bimage, mnickname, mmyimage, mintro, b.murl
+       			 from board b, member m
+       			 where b.memail = m.memail and cno = #{cno} 
+       			 order by blike desc)
+		where rownum &lt;= 12
+	</select>
+	
+	<!-- 최신순으로 불러오기 contents 총 데이터 -->
+	<select id="selectNewAll" resultType="board">	
+	  	 select bno, btitle, REGEXP_REPLACE(bcontent, <![CDATA['<[^>]*>|\&([^;])*;']]>) as bcontent, bdate, blike, b.cno, ccontent, bimage, mnickname, mmyimage, mintro, b.murl
+         from board b, member m, category c
+       	 where b.memail = m.memail and b.cno = c.cno
+       	 order by bdate desc
+	</select>
+	
+	<!-- 최신순으로 불러오기 contents 카테고리별 데이터 -->
+	<select id="selectNewCategory" parameterType="int" resultType="board">
+		select bno, btitle, REGEXP_REPLACE(bcontent, <![CDATA['<[^>]*>|\&([^;])*;']]>) as bcontent, bdate, blike, b.cno, ccontent, bimage, mnickname, mmyimage, mintro, b.murl
+       	from board b, member m, category c
+       	where b.memail = m.memail and b.cno = #{cno} and b.cno = c.cno 
+       	order by bdate desc
+	</select>
+	
+	<select id="selectUserBoard" parameterType="pager" resultType="board">
+		select rnum, bno, btitle, REGEXP_REPLACE(bcontent, <![CDATA['<[^>]*>|\&([^;])*;']]>) as bcontent, bdate, blike, bimage, mnickname, murl, ccontent, commentnum
+		from (
+			select rownum as rnum, bno, btitle, REGEXP_REPLACE(bcontent, <![CDATA['<[^>]*>|\&([^;])*;']]>) as bcontent, bdate, blike, bimage, mnickname, murl, ccontent, commentnum
+			from(
+				select b.bno, btitle, REGEXP_REPLACE(bcontent, <![CDATA['<[^>]*>|\&([^;])*;']]>) as bcontent, bdate, blike, bimage, mnickname, b.murl, ccontent, comments.commentnum as commentnum
+					from board b, member m, category c, (
+														select count(r.bno) as commentnum , b.bno  
+														from board b, reply r
+														where b.bno = r.bno (+)
+														group by b.bno
+													  ) comments
+					where b.murl = #{murl} AND m.memail = b.memail AND c.cno = b.cno AND comments.bno = b.bno	
+				order by bdate desc
+				) 
+			where rownum &lt; = #{endRowNo}
+		)
+		where rnum &gt; = #{startRowNo}
+	</select>
+
+	<select id="countAll" resultType="int">
+		select count(*) 
+		from board
+	</select>
+	
+	<select id="selectBoardComment" parameterType="int" resultType="reply">
+        select  rno, rcontent, reply.memail,  rdate, member.mnickname, member.murl, board.bno, member.mmyimage
+		from board, reply, member
+		where board.bno = reply.bno AND board.bno = #{bno} AND member.memail = reply.memail
+		order by rdate asc
+	</select>	
+	
+	<select id="selectAll" parameterType="String" resultType="board">
+		select c.ccontent, b.bno, b.btitle, b.bdate, b.blike, b.memail
+		from category c, board b
+		where b.cno = c.cno and b.memail = #{memail}
+		order by b.bdate desc
+	</select>
+
+	<select id="selectByPage" parameterType="pager" resultType="board">
+		select ccontent, rnum, bno, btitle, bdate, blike, murl
+		from (select rownum as rnum, ccontent, bno, btitle, bdate, blike, murl
+		      from (select ccontent, bno, btitle, bdate, blike, murl
+		            from category c, board b
+		            where b.cno = c.cno and b.murl = #{murl}
+		            order by bdate desc
+		                )
+		      where rownum &lt;=#{endRowNo})
+		where rnum &gt;=#{startRowNo}
+	</select>  
+
+	<select id="myBoardCount" parameterType="String" resultType="int">
+		select count(*)
+		from board
+		where murl = #{murl}
+	</select>
+	
+	<insert id="insert" parameterType="board">
+		insert into board(cno, bno, btitle, bcontent, bdate, memail, blinkcontent, murl, blike, bimage)
+		values (#{cno}, seq_board_bno.nextval, #{btitle}, #{bcontent}, sysdate, #{memail}, #{blinkcontent}, #{murl}, #{blike}, #{bimage})
+	</insert>
+
+	<insert id="commentinsert" parameterType="reply">
+		insert into reply(rno, rcontent, firstcomment, memail, bno, rdate)
+		values (seq_reply_rno.nextval, #{rcontent}, 0, #{memail}, #{bno}, sysdate)
+	</insert>
+
+	<delete id="deleteBlog">
+		delete from board where bno = #{bno} and murl = #{murl}
+	</delete>
+	
+	<delete id="deleteByBno" parameterType="int">
+		delete from board where bno=#{bno}
+	</delete>
+
+	<delete id="commentDelete" parameterType="int">
+		delete from reply where rno=#{rno}
+	</delete>
+
+	<select id="boardLikeCount" parameterType="int" resultType="board">
+		select *
+		from board
+		where bno=#{bno} 
+	</select>
+	
+	<select id="userBoardCountAll" parameterType="String" resultType="int">
+		select count(*) from board where murl = #{Usermurl} 
+	</select>
+	
+	<select id="selectListAll" parameterType="pager" resultType="board">
+		SELECT rnum, bno, btitle, bdate, memail, ccontent
+		FROM (SELECT rownum as rnum, bno, btitle, bdate, memail, ccontent
+					FROM (SELECT bno, btitle, bdate, memail, ccontent
+					        	FROM board b, category c
+					        	WHERE b.cno = c.cno 
+					        	ORDER BY bdate DESC)
+					WHERE rownum &lt;=#{endRowNo})
+		WHERE rnum &gt;= #{startRowNo}
+	</select>
+	
+	<select id="selectContentBno" parameterType="int" resultType="board">
+		select cno, bno, btitle, bcontent, bdate, b.memail, blinkcontent, b.murl, blike, bimage
+		from board b, member m
+		where b.memail = m.memail and bno = #{bno}
+	</select>
+
+	<update id="update" parameterType="board">
+		update board
+		set cno=#{cno}, btitle=#{btitle}, bcontent=#{bcontent}, memail=#{memail}, blinkcontent=#{blinkcontent}, murl=#{murl}, bimage=#{bimage}
+		where bno=#{bno}
+	</update>
+	
+	<update id="commentModify" parameterType="map">
+		update reply
+		set rcontent=#{rcontent}
+		where rno = #{rno}
+	</update>
+	
+	<update id="updateNoImage" parameterType="board">
+		update board
+		set cno=#{cno}, btitle=#{btitle}, bcontent=#{bcontent}, memail=#{memail}, blinkcontent=#{blinkcontent}, murl=#{murl}
+		where bno=#{bno}
+	</update>	
+
+	<select id="heartCheck" parameterType="map" resultType="int">
+		select count(*) from liked where bno= #{bno} AND memail=#{SessionMemail}
+	</select>
+	
+	<update id="likeadd" parameterType="int">
+		update board set blike = nvl(to_number(blike), 0) + 1 where bno = #{bno}
+	</update>
+	
+	<update id="likesub" parameterType="int">
+		update board set blike = nvl(to_number(blike), 0) - 1 where bno = #{bno}
+	</update>
+	
+	<insert id="likeinfo" parameterType="map">
+		insert into liked(lno, bno, memail, ldate)
+		values (seq_liked_lno.nextval, #{bno}, #{sessionMemail}, sysdate)
+	</insert>
+	
+	<delete id="likeinfoDelete" parameterType="map">	
+		delete from liked where bno=#{bno} AND memail = #{sessionMemail}
+	</delete>
+	
+	<!-- search -->
+	<select id="userBoardSearchCount" parameterType="search" resultType="int">
+		SELECT count(*)
+		FROM board b, category c
+		WHERE b.cno = c.cno and ${value} like '%'|| #{search}||'%'
+	</select>
+	
+	<select id="searchList" parameterType="map" resultType="board">
+		select * from board where btitle like '%' ||  #{searchContent} || '%'  OR bcontent like '%' ||  #{searchContent} || '%'
+		AND murl = #{murl}
+	</select>
+	
+	<select id="searchListUser" parameterType="pager" resultType="board">
+		SELECT rnum, bno, btitle, bdate, memail, ccontent
+		FROM (SELECT rownum as rnum, bno, btitle, bdate, memail, ccontent
+					FROM (SELECT bno, btitle, bdate, memail, ccontent
+					        	FROM board b, category c
+					       		WHERE b.cno = c.cno and ${value} like '%'|| #{murl}||'%' 
+					       		 ORDER BY bdate DESC)
+					WHERE rownum &lt;=#{endRowNo})
+		WHERE rnum &gt;= #{startRowNo}
+	</select>
+</mapper>

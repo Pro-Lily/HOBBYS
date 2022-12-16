@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.member">
+
+	<select id="selectByMemail" parameterType="String" resultType="member"> <!-- 세션 이메일이 들어온다 -->
+		SELECT memail, mpassword, mnickname, mphonenum, mintro, mmyimage, mrole, menabled, murl
+		FROM member
+		WHERE memail = #{memail} <!-- 이메일에 맞는 정보 반환 -->
+	</select>
+	
+	<select id="selectByMurl" parameterType="String" resultType="member">
+		SELECT memail, mpassword, mnickname, mphonenum, mintro, mmyimage, mrole, menabled, murl
+		FROM member
+		WHERE murl = #{murl} <!-- Murl을 얻을꺼 -->
+	</select>
+	
+	<update id="updatenickintro" parameterType="member">
+		UPDATE member SET mnickname=#{mnickname}, mintro=#{mintro}
+		WHERE memail=#{memail}
+	</update>
+	
+	<update id="updateimage" parameterType="member">
+		UPDATE member SET mmyimage=#{mmyimage}
+		WHERE memail=#{memail}
+	</update>
+	
+	<select id="countMemail" parameterType="String" resultType="int">
+		SELECT count(*)
+		FROM member
+		WHERE memail=#{memail}
+	</select>
+	
+	<select id="countMnickname" parameterType="String" resultType="int">
+		SELECT count(*)
+		FROM member
+		WHERE mnickname=#{mnickname}
+	</select>
+	
+	<insert id="insert" parameterType="member">
+		INSERT INTO member(memail, mpassword, mnickname, mphonenum, mintro, mmyimage, menabled, mrole, murl) 
+		VALUES (#{memail},#{mpassword},#{mnickname}, #{mphonenum},#{mintro},#{mmyimage},#{menabled},#{mrole},#{murl})
+	</insert>
+	
+	<select id="selectmrole" resultType="member">
+		SELECT memail, mnickname, mmyimage, mrole, mphonenum, murl
+		FROM member
+		WHERE mrole=#{mrole}
+	</select>
+	
+	<update id="updaterole" parameterType="member">
+		UPDATE member SET mrole=#{mrole}
+		WHERE memail=#{memail}
+	</update>
+
+	<!-- enabled 1인 사람 중 이메일 지정해서 불러와서 count -->
+	<select id="menabledThing" parameterType="int" resultType="int"> 
+		SELECT count(*)
+		FROM member
+		WHERE menabled=1
+	</select>
+	
+	<!-- enabled 1인 사람 중 이메일 지정해서 정보 pager로 불러오기 -->
+	<select id="selectPageList" resultType="member"> 
+		SELECT memail, menabled, mnickname, mphonenum, mintro, mmyimage
+		FROM (SELECT rownum as rnum, memail, menabled, mnickname, mphonenum, mintro, mmyimage
+					FROM member
+					WHERE menabled=1 and rownum &lt;=#{endRowNo})
+		WHERE rnum &gt;=#{startRowNo}
+	</select>
+	
+	<!-- 활성화인 회원(1)을 비활성화(0)으로 변경하기 -->
+	<select id="changeToAbled" parameterType="String" resultType="member">
+		UPDATE member
+	    SET menabled=0
+	    WHERE memail=#{memail}
+	</select> 
+	
+	<!-- 비활성화인 회원(0)을 활성화(1)으로 변경하기 -->
+	<select id="changeToDisabled" parameterType="String" resultType="member">
+		UPDATE member
+	    SET menabled=1
+	    WHERE memail=#{memail}
+	</select> 
+		
+	<select id="getMemberInfo" parameterType="String" resultType="member">
+		select * from member where memail = #{sessionMemail}
+	</select>
+	
+	<delete id="userDelete">
+		delete from member where memail = #{sessionMemail}
+	</delete>
+	
+	<select id="selectByMphonenum" parameterType="String" resultType="member">
+		select memail, mphonenum, mnickname
+		from member
+		where mphonenum = #{mphonenum}
+	</select>
+
+	<select id="findmpassword" parameterType="member" resultType="int">
+		select count(*)
+		from member
+		where mphonenum = #{mphonenum} and memail = #{memail}
+	</select>
+
+	<update id="updatePassword" parameterType="member">
+		update member
+		set mpassword = #{mpassword}
+		where memail = #{memail}
+	</update>
+</mapper>

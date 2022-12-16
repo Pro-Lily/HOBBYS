@@ -1,0 +1,407 @@
+@charset "UTF-8";
+
+/* 프로필 사진 css */
+.profile {
+	position: relative;
+	float: left;
+	display: inline;
+	/* 프로필 사진 크기 */
+	width: 4.8611vw;
+	height: 4.8611vw;
+	margin-right: 3%;
+	border-radius: 50%;
+}
+
+.profile_rank {
+	position: relative;
+	float: left;
+	display: inline;
+	/* 프로필 사진 크기 */
+	margin-right: 3%;
+
+}
+
+/* 사용자 닉네임 §공주님§ */
+.nick-name {
+	/* font-size: 0.6944vw; */
+	font-size: 10px;
+	color: #6F6F6F;
+} 
+
+#home-title {
+	/* font-size: 0.9722vw; */
+	font-size: 14px;
+	color: #5D5D5D;
+	width: 70%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.section-padding {
+	padding-top: 5.5556vw;
+	padding-bottom: 8.3333vw
+}
+
+.section-padding-contents {
+	padding-top: 0.6944vw;
+	padding-bottom: 8.3333vw
+}
+
+/* 게시물 제목 css */
+/* #blog-title{
+	font-size: 13px;
+	color: #000000;
+}*/
+
+/* 게시물 내용 css */
+/*#blog-content{
+	margin-top: 1%;
+	font-size: 12px;
+} */
+
+/*----- 카테고리 시작 -----*/
+ul.nev {
+	list-style: none;
+	text-align: center;
+	padding-top: 8%;
+	padding-bottom: 5%;
+	width: 100%;
+}
+
+ul li.nev {
+	display: inline;
+	padding: 1.3%;
+	font-size: 27px;
+}
+
+ul.nev_sm {
+	list-style: none;
+	text-align: center;
+	padding-top: 8%;
+	padding-bottom: 5%;
+	width: 100%;
+}
+
+ul li.nev_sm {
+	display: inline;
+	padding: 1.3%;
+	font-size: 25px;
+}
+
+.rank {
+	display: inline;
+	padding: 1.3%;
+}
+
+.link_tab {
+	color: #484848;
+	font-size: 36px;
+	font-family: "Noto Sans DemiLight", AppleSDGothicNeo-Regular,
+		"Malgun Gothic", "맑은 고딕", dotum, 돋움, sans-serif;
+	line-height: 1;
+	height: 2.7778vw;
+	letter-spacing: -0.0833vw;
+}
+
+.link_tab_sm {
+	color: #484848;
+	font-size: 20px;
+	font-family: "Noto Sans DemiLight", AppleSDGothicNeo-Regular,
+		"Malgun Gothic", "맑은 고딕", dotum, 돋움, sans-serif;
+	line-height: 1;
+	height: 2.7778vw;
+	letter-spacing: -0.0833vw;
+}
+
+.h {
+	margin-top: 5%;
+	margin-left: 16%;
+	color: #000000;
+	font-family: AppleSDGothicNeo-Regular;
+	font-weight: bold;
+	letter-spacing: -0.0833vw;
+	font-size: 16px;
+}
+
+.rc {
+	letter-spacing: -0.1389vw;
+	margin-left: 16%;
+	color: #3D3D3D;
+	font-size: 15px;
+	font-family: "Noto Sans DemiLight", AppleSDGothicNeo-Regular,
+		"Malgun Gothic", "맑은 고딕", dotum, 돋움, sans-serif;
+	/* letter-spacing: -0.0833vw; */
+}
+/*----- 카테고리 끝 -----*/
+@font-face {
+	font-family: "주아";
+	src: url("../font/서울한강.ttf");
+}
+
+.home_t {
+	text-align: center; 
+	font-family: "주아";
+	font-size: 14px;
+	color: #5A5A5A;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+    width: 95%;
+    font-weight: bold;
+}
+	
+.home_p {
+	font-family: "주아";
+	font-size: 12px;
+	color: #5A5A5A;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+}
+
+.home_h {
+	font-family: "주아";
+}
+
+/* contents.jsp css시작 */
+
+/* 게시된 시간, 카테고리 안보이게 */
+.screen_out {
+	overflow: hidden;
+    line-height: 0;
+}
+
+/* 카테고리 종류, 좋아요 수, 게시된 시간 <dd> css */
+.ddcss {
+	/* display: block; */
+    /* float: left; */
+    font-size: 13px;
+    line-height: 0.9028vw;
+    font-family: fontARD;
+    color: #909090;
+    padding-left: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* <a> 태그 css */
+.box_desc {
+	display: block;
+	position: relative;
+	padding: 2.2222vw 7.9167vw 1.9444vw 0; /*1.9444vw*/
+	text-decoration: none;
+}
+
+.box_desc_type {
+	/* width: 62.2222vw;
+	height: 9.8611vw; */
+	padding: 1.7222vw 0 0.9500vw;
+}
+
+/* 게시물 사진 <img> css */
+.img_thumb {
+	overflow: hidden;
+	padding: 1.9444vw 0 0.0694vw 6.3889vw;
+	display: block;
+	float: right;
+	position: relative;
+	width: 8.8889vw;
+	height: 8.8889vw;
+	padding: 0;
+	margin: 0 0 0 3.1944vw;
+}
+
+.img_thumb_sm {
+	overflow: hidden;
+	padding: 1.9444vw 0 0.0694vw 6.3889vw;
+	display: block;
+	float: right;
+	position: relative;
+	width: 50px;
+	height: 50px;
+	padding: 0;
+	margin: 0 0 0 3.1944vw;
+}
+
+.thumb_g {
+	width: 8.8889vw; 
+	height: 8.8889vw;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.thumb_g_sm {
+	width: 50px; 
+	height: 50px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+/* <div> 태그 css */
+.wrap_cont {
+	max-height: none;
+	margin: 0;
+	padding: 0;
+	display: block;
+}
+
+.wrap_data {
+	float: left;
+	width: 11.0417vw;
+	padding: 0.3472vw 0 0;
+}
+
+/* <dl> 태그 css */
+.list_data {
+	position: static;
+	/* overflow: hidden; */
+	padding: 0;
+	top: 2.1528vw;
+	right: 1.3194vw;
+	line-height: 1.5278vw;
+	font-size: 0.9028vw;
+}
+
+/* <strong> 태그 css */
+.desc_tit {
+	display: block;
+	overflow: hidden;
+	position: relative;
+	max-width: 70%; 
+	padding: 0.4167vw 0 0.3472vw;
+	font-size: 1.2889vw;
+	line-height: 1;
+	color: #363636;
+	font-weight: normal;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* sm 사이즈 <strong> 태그 css */
+.desc_tit_sm {
+	display: block;
+	overflow: hidden;
+	 text-overflow: ellipsis;
+	white-space: nowrap;
+	 width: 80%;
+	padding: 0.4167vw 0 0.3472vw;
+	font-size: 14px;
+	color: #565656;
+}
+
+
+/* <p> 태그 css */
+.desc_g {
+	position: absolute;
+	top: 5.0000vw;
+	left: 10.9722vw;
+	width: 39.1667vw;
+	max-height: 3.0556vw;
+	font-size: 0.8722vw;
+	color: #777;
+	line-height: 1.5278vw;
+	padding: 0 0 0 0.0694vw;
+	text-overflow: ellipsis;
+	overflow : hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+/* 모바일 <p> 태그 css */
+.desc_sm {
+	overflow: hidden;
+	 text-overflow: ellipsis;
+	white-space: nowrap;
+	 width: 80%;
+	font-size: 11px;
+	color: #777;
+}
+
+
+/* <div> 태그 css */
+.info_g {
+	display: block;
+	bottom: 2.0222vw;
+	margin-left: 18%;
+	padding: 0;
+	font-size: 0.9028vw;
+	line-height: 0.9722vw;
+	margin-top: 7%;
+}
+
+.info_g_sm {
+	display: block;
+	bottom: 2.2222vw;
+	padding: 0;
+	font-size: 0.9028vw;
+}
+
+/* <span> 사용자 이미지 위 css */
+wrap_thumb {
+	display: block;
+	float: left;
+} 
+
+/* <img> 사용자 이미지 css */
+.thumb_profile {
+	width: 30px;
+	height: 30px;
+	margin: 0;
+	float: left;
+	border-radius: 50%; 
+}
+
+/* sm 사이즈 <img> 사용자 이미지 css */
+.thumb_profile_sm {
+	width: 20px;
+	height: 20px;
+	margin-right: 2%;
+	float: left;
+	border-radius: 50%; 
+}
+
+/* <span> 사용자 닉네임 css */
+.txt_id {
+	display: inline-block;
+	max-width: 80%;
+	padding: 0.3472vw 0 0 0.8333vw;
+	vertical-align: top;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin: 0 0 0 -0.0694vw;
+	color: #333;
+	text-decoration: none;
+	font-size: 0.6944vw;
+}
+
+/* sm 사이즈 <span> 사용자 닉네임 css */
+.txt_id_sm {
+	display: inline-block;
+	max-width: 17.3611vw;
+	font-size: 9px;
+	vertical-align: top;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin: 0 0 0 -0.0694vw;
+	color: #333;
+	text-decoration: none;
+}
+
+.txt_date {
+	font-size: 0.6944vw;
+	display: inline-block;
+	max-width: 9.5833vw;
+    color: #333;
+    padding: 0.1736vw 0 0 0.3472vw;
+    line-height: 1.2500vw;
+    vertical-align: top;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
